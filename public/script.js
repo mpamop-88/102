@@ -6,30 +6,35 @@ function sendToBot(action) {
   tg.sendData(JSON.stringify({ type: action }));
 }
 
+const panel = document.createElement('div');
+panel.style.display = 'fixed';
+panel.id = 'panel';
+panel.className = 'main';
+panel.style.bottom = '25px';
+panel.style.right = '25px';
+panel.style.position = 'absolute';
+document.body.appendChild(panel);
+
 const buttons = [
-  { text: "⚔ Ближайший бой", action: "nearest_battle" },
-  { text: "🔄 Замены", action: "substitutions" },
-  { text: "⚓ Порт", action: "port" }
+  { text: '⚔ Ближайший бой', action: 'nearest_battle' },
+  { text: '🔄 Замены', action: 'help' },
+  { text: '⚓ Порт', action: 'port' },
 ];
 
-const panel = document.createElement("div");
-panel.id = "panel";
-document.appendChild(panel);
-
-buttons.forEach(btn => {
-  const button = document.createElement("button");
+buttons.forEach((btn) => {
+  const button = document.createElement('button');
   button.textContent = btn.text;
-  button.style.display = "block";
-  button.style.margin = "10px auto";
-  button.style.padding = "12px 18px";
-  button.style.border = "none";
-  button.style.borderRadius = "10px";
-  button.style.background = "#007aff";
-  button.style.color = "white";
-  button.style.fontSize = "16px";
-  button.style.cursor = "pointer";
-  button.style.width = "220px";
+  button.style.display = 'flex';
+  button.style.margin = '5px';
+  button.style.padding = '3px 7px';
+  button.style.background = 'white';
+  button.style.color = 'green';
+  button.style.fontSize = '10px';
+  button.style.fontWeight = 'bold';
+  button.style.cursor = 'pointer';
+  button.style.width = '160px';
 
-  button.addEventListener("click", () => sendToBot(btn.action));
   panel.appendChild(button);
+
+  button.addEventListener('click', () => sendToBot(btn.action));
 });
