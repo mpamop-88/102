@@ -1,22 +1,47 @@
-
 import express from "express";
 import dotenv from "dotenv";
-import bot from "./bot.js";
+import { Telegraf } from "telegraf";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const WEBAPP_URL = process.env.WEBAPP_URL;
 
-// Раздаём статические файлы (наш WebApp)
+const bot = new Telegraf(BOT_TOKEN);
+
+// Раздаём статику
 app.use(express.static("public"));
 
-// Подключаем webhook для бота
-const webhookPath = "/bot";
-bot.telegram.setWebhook(`${process.env.WEBAPP_URL}${webhookPath}`);
-app.use(bot.webhookCallback(webhookPath));
+// Бот: кнопка для открытия WebApp
+bot.start((ctx) => {
+  ctx.reply("Жми кнопку 👇", {
+    reply_markup: {
+      keyboard: [
+        [
+          {
+            text: "Открыть WebApp 🌐",
+            web_app: { url: WEBAPP_URL }
+          }
+        ]
+      ],
+      resize_keyboard: true
+    }
+  });
+});
 
+// Обработка данных от WebApp
+bot.on("message", (ctx) => {
+  if (ctx.message.web_app_data) {
+    const data = JSON.parse(ctx.message.web_app_data.data);
+    ctx.reply(`Ты нажал: ${data.type}`);
+  }
+});
+
+bot.launch();
+
+// Запуск сервера
 app.listen(PORT, () => {
-  console.log(`✅ Сервер запущен: http://localhost:${PORT}`);
-  console.log(`🌍 WebApp доступен: ${process.env.WEBAPP_URL}`);
+  console.log(`✅ WebApp доступен на http://localhost:${PORT}`);
 });
