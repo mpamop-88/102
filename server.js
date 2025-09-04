@@ -6,7 +6,7 @@ import bot from "./bot.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Раздаём статические файлы (наш WebApp)
 app.use(express.static("public"));
