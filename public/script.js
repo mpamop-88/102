@@ -12,7 +12,9 @@ const buttons = [
   { text: "⚓ Порт", action: "port" }
 ];
 
-const panel = document.getElementById("panel");
+const panel = document.createElement("div");
+panel.id = "panel";
+document.appendChild(panel);
 
 buttons.forEach(btn => {
   const button = document.createElement("button");
